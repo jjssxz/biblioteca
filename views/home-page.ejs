@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #292929;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"] {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        @media(max-width: 500px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .form-group input[type="text"],
+            .form-group input[type="number"] {
+                font-size: 14px;
+            }
+
+            button[type="submit"] {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Biblioteca</h1>
+        <form action="/search" method="get" id="form">
+            <div class="form-group">
+                <label for="book">Título do livro</label>
+                <input type="text" id="book" name="title">
+            </div>
+            <div class="form-group">
+                <label for="Radio1">
+                    <input type="radio" name="exampleRadios" id="Radio1" value="option1" checked>
+                    Buscar por título
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="year">Ano do livro</label>
+                <input type="number" id="year" name="year" disabled>
+            </div>
+            <div class="form-group">
+                <label for="Radio2">
+                    <input type="radio" name="exampleRadios" id="Radio2" value="option2">
+                    Buscar por ano
+                </label>
+            </div>
+            <button type="submit">Buscar</button>
+        </form>
+        <% if(errorMessage){ %>
+        <div><%= errorMessage %></div>
+        <% } else if(activeSearch){ %>
+        <div>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Ano</th>
+                </tr>
+                <% for(let i=0; i < results.length; i++){ %>
+                <tr>
+                    <td><%= results[i].id %></td>
+                    <td><%= results[i].title %></td>
+                    <td><%= results[i].author %></td>
+                    <td><%= results[i].year %></td>
+                </tr>
+                <% } %>
+            </table>
+        </div>
+        <% } %>
+    </div>
+
+    <script>
+        document.getElementById("Radio1").addEventListener("click", function () {
+            document.getElementById("book").disabled = false;
+            document.getElementById("year").disabled = true;
+        });
+
+        document.getElementById("Radio2").addEventListener("click", function () {
+            document.getElementById("book").disabled = true;
+            document.getElementById("year").disabled = false;
+        });
+
+        document.getElementById("form").addEventListener("submit", function () {
+            if (document.getElementById("Radio2").checked) {
+                this.setAttribute("action", `/ano/${document.getElementById("year").value}`);
+                this.setAttribute("method", "POST");
+            }
+        });
+    </script>
+</body>
+
+</html>
